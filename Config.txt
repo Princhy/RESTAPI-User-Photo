@@ -1,0 +1,50 @@
+npm init 
+
+tsc
+
+npm i express  @types/express --save
+
+npm i typeorm mysql reflect-metadata --save
+
+npm i nodemon
+
+Let's create app-data-source.ts where we set up initial database connection options:
+
+app-data-source.ts :
+import { DataSource } from "typeorm"
+import dotenv from "dotenv"
+//initialisation dotenv
+dotenv.config();
+
+const myDataSource = new DataSource({
+    type: "mysql",
+    host: process.env.DB_HOST,
+    port: Number( process.env.DB_PORT),
+    username: process.env.DB_USER_NAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    entities: ["src/models/*.ts"],
+    migrations: ["src/migrations/**/*.ts"],
+    migrationsTableName: "migrations",
+    logging: true,
+    synchronize: false,
+});
+export default myDataSource;
+
+Configure each option as you need. Learn more about options here.
+Let's create a user.entity.ts entity inside src/entity :
+
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
+
+@Entity()
+export class User {
+    @PrimaryGeneratedColumn()
+    id: number
+
+    @Column()
+    firstName: string
+
+    @Column()
+    lastName: string
+}
+
